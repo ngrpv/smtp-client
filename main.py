@@ -25,7 +25,8 @@ def _send(sock: socket.socket, data: str) -> str:
 
 def _get_message():
     smtp = Smtp(user_data['Mail'])
-    for attachment in message['Attachments'].split(', '):
+    for attachment in filter(lambda x: len(x.strip()) > 0,
+                             message['Attachments'].split(', ')):
         smtp.attach(attachment)
     text = ''
     with open(message['MessageFile'], 'r', encoding='utf-8') as msg_f:
@@ -48,7 +49,8 @@ def main():
         log(_send(sock, b64_mail))
         log(_send(sock, b64_password))
         log(_send(sock, f'MAIL FROM: {user_data["Mail"]}'))
-        log(_send(sock, f'RCPT TO: {message["Mail"]}'))
+        for r in message["Mail"].split(';'):
+            log(_send(sock, f'RCPT TO: {r}'))
         log(_send(sock, f'DATA'))
         log(_send(sock, _get_message()))
 
@@ -58,4 +60,3 @@ if __name__ == '__main__':
         main()
     except Exception as e:
         print(e)
-
