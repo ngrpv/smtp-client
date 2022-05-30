@@ -1,6 +1,6 @@
+import base64
 import os.path
 from mimetypes import types_map
-import base64
 
 BOUNDARY = '----==--bound.53245.vla1-5245e79bed88.qloud-c.yandex.net'
 
